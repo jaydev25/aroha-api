@@ -76,7 +76,7 @@ const listing = (req, res) => {
     if (err) {
       return res.status(422).json(err.details[0].message);
     } else {
-      return db.Ads.findAll({
+      return db.Rooms.findAll({
         include: [{
           model: db.Users,
           attributes: ['id', 'email', 'contact'],
@@ -84,7 +84,7 @@ const listing = (req, res) => {
             isVerified: true
           }
         }, {
-          model: db.AdsMedia,
+          model: db.RoomUsers,
           required: false
         }],
         order: [
