@@ -24,11 +24,18 @@ let socketIO = require('socket.io');
 let io = socketIO(server);
 
 io.on('connection', (socket) => {
-  console.log('user connected');
-
-  socket.on('hit', (message) => {
-    console.log(message);
-    io.emit(message);
+  
+  socket.on('disconnect', function(){
+    io.emit('users-changed', {user: socket.nickname, event: 'left'});   
+  });
+ 
+  socket.on('set-nickname', (nickname) => {
+    socket.nickname = nickname;
+    io.emit('users-changed', {user: nickname, event: 'joined'});    
+  });
+  
+  socket.on('add-message', (message) => {
+    io.emit('message', {text: message.text, from: socket.nickname, created: new Date()});    
   });
 });
 
